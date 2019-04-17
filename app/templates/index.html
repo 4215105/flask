@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+		{% if user and user.username %}
+			<h1> hello ,{{ user.username }} !</h1>
+		{% else %}
+			<h1> 你好，陌生人！！</h1>
+		{% endif %}
+		{% for post in posts %}
+			<div><p>{{ post.author.username }} 说: </p><b>{{ post.body }}</b>
+			</div>
+		{% endfor %}
+{% endblock content%}

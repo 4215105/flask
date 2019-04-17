@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+	<div class="main_div" id="main_div">
+		<ul class="ul_img">
+			{% for img_name in img_src %}
+				<li class="li_img"><img src="{{ url_for('static', filename='img/{0}'.format(img_name))}}" data-url="#"></li>
+			{% endfor%}
+		</ul>
+	</div>
+	<div class="btn_div" id="btn_div">
+		{% for botton in btn_src %}
+			<img class="img_btn div_btn" src="{{ url_for('static', filename='btn/{0}'.format(botton))}}" >
+		{% endfor%}
+	</div>
+{% endblock content %}

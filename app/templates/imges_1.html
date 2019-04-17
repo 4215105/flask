@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id="banner">
+	<div id="carousel">
+		{% for img_name in img_src %}
+		<img src="{{ url_for('static', filename='img/{0}'.format(img_name))}}" data-url="#">
+		{% endfor%}
+	</div>
+</div>
+{% endblock content %}

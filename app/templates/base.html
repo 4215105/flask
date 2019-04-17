@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="shortcut icon" href="{{url_for('static', filename='ico/favicon.ico')}}" />
+		<link rel="stylesheet" tyep="text/css" href="{{url_for('static', filename='css/main.css')}}" />
+		<script tyep="text/javascript" src="{{url_for('static', filename='js/main.js')}}" ></script>
+		{% if title %}
+			<title> hello ,{{ title }} </title>
+		{% else %}
+			<title> hello ,大怪兽！！ </title>
+		{% endif %}
+	</head>
+	<body>
+		<div>博客 : <a href="{{ url_for("index") }}">首页</a>|<a href="{{ url_for("imges") }}">图片</a></div>
+		<hr>
+		{% with messages = get_flashed_messages() %}
+			{% if messages %}
+        		<ur>
+        		{% for message in messages %}
+            			<li>{{ message }}</li>
+        		{% endfor %}
+        		</ur>
+        		{% endif %}
+       		{% endwith %}
+		{% block content %}
+
+		{% endblock content %}
+	</body>
+</html>
