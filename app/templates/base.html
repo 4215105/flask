@@ -12,7 +12,13 @@
 		{% endif %}
 	</head>
 	<body>
-		<div>博客 : <a href="{{ url_for("index") }}">首页</a>|<a href="{{ url_for("imges") }}">图片</a></div>
+		<div>博客 : <a href="{{ url_for("index") }}">首页</a>|<a href="{{ url_for("imges") }}">图片</a>
+			{% if user and user.is_authenticated and user.username %}
+			| <form style="display: inline;" action="{{url_for('search')}}" method="post" name="search">{{g.search_form.hidden_tag()}}{{g.search_form.search(size=20)}}<input type="submit" value="Search"></form>
+     		| <a href="{{ url_for('user', username = user.username) }}">Your Profile</a>
+     		| <a href="{{ url_for('logout') }}">Logout</a>
+     		{% endif %}
+		</div>
 		<hr>
 		{% with messages = get_flashed_messages() %}
 			{% if messages %}
