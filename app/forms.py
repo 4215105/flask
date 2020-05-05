@@ -4,6 +4,7 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextA
 from wtforms.validators import DataRequired, Length
 from wtforms.validators import ValidationError, Email, EqualTo
 from app.models import User
+from flask_babel import gettext
 
 
 class LoginForm(FlaskForm):
@@ -26,13 +27,15 @@ class RegistrationForm(FlaskForm):
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
         if user is not None:
-            raise ValidationError(u'用户名重复了，请您重新换一个呗!')
+            raise ValidationError(gettext(u'用户名重复了，请您重新换一个呗!'))
+            # raise ValidationError(gettext(u'用户名重复了，请您重新换一个呗!'))
 
     # 校验邮箱是否重复
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
-            raise ValidationError(u'邮箱重复了，请您重新换一个呗!')
+            raise ValidationError(gettext(u'邮箱重复了，请您重新换一个呗!'))
+            # raise ValidationError(gettext(u'邮箱重复了，请您重新换一个呗!'))
 
 
 class EditForm(FlaskForm):

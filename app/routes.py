@@ -13,6 +13,25 @@ from config import POSTS_PER_PAGE
 from forms import SearchForm
 from config import MAX_SEARCH_RESULTS
 from emails import follower_notification
+from app import babel
+from config import LANGUAGES
+from flask_babel import gettext
+from guess_language import guessLanguage
+from flask import jsonify
+from translate import baidu_translate
+
+@app.route('/translate', methods = ['POST'])
+@login_required
+def translate():
+    return jsonify({
+        'text': baidu_translate(
+            request.form['text'],
+            request.form['sourceLang'],
+            request.form['destLang']) })
+            
+@babel.localeselector
+def get_locale():
+    return request.accept_languages.best_match(LANGUAGES.keys())
 
 
 @app.before_request
@@ -23,6 +42,7 @@ def before_request():
         db.session.add(g.user)
         db.session.commit()
         g.search_form = SearchForm()
+    g.locale = get_locale()
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -40,7 +60,8 @@ def login():
         # 判断用户不存在或者密码不正确
         if user is None or not user.check_password(form.password.data):
             # 如果用户不存在或者密码不正确就会闪现这条信息
-            flash(u'无效的用户名或密码')
+            flash(gettext("Logon failure: unknown user name or bad password."))
+            # flash(gettext('无效的用户名或密码'))
             # flash('Logon failure: unknown user name or bad password.')
             # 然后重定向到登录前页面
             return redirect(url_for('login'))
@@ -65,7 +86,8 @@ def register():
         return redirect(url_for('index'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data)
+        username = User.make_valid_username(form.username.data)
+        user = User(username=username, email=form.email.data)
         user.set_password(form.password.data)
         db.session.add(user)
         # db.session.commit()
@@ -90,7 +112,11 @@ def index(page=1):
     user = g.user
     form = PostForm()
     if form.validate_on_submit():
-        post = Post(body=form.post.data, timestamp=datetime.utcnow(), author=g.user)
+        language = guessLanguage(form.post.data)
+        if language == 'UNKNOWN' or len(language) > 5:
+            language = ''
+        post = Post(body=form.post.data, timestamp=datetime.utcnow(), author=g.user,
+            language = language)
         db.session.add(post)
         db.session.commit()
         flash('Your post is now live!')

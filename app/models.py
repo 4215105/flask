@@ -7,6 +7,7 @@ from app import login
 from hashlib import md5
 from app import app
 import sys
+import re
 if sys.version_info >= (3, 0):
     enable_search = False
 else:
@@ -78,6 +79,10 @@ class User(UserMixin, db.Model):
     def followed_posts(self):
         return Post.query.join(followers, (followers.c.followed_id == Post.user_id)).filter(
             followers.c.follower_id == self.id).order_by(Post.timestamp.desc())
+    
+    @staticmethod
+    def make_valid_username(username):
+        return re.sub('[^a-zA-Z0-9_\.]', '', username)
 
 
 class Post(db.Model):
@@ -87,6 +92,7 @@ class Post(db.Model):
     body = db.Column(db.String(140))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    language = db.Column(db.String(5))
 
     def __repr__(self):
         return '<Post {}>'.format(self.body)

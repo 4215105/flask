@@ -1,6 +1,14 @@
 # coding:utf8
 import os
 
+# -*- coding: utf-8 -*-
+# ...
+# available languages
+LANGUAGES = {
+    'en': 'English',
+    'zh': 'Chinese'
+}
+
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASE_DIR, 'app.db')
 SQLALCHEMY_MIGRATE_REPO = os.path.join(BASE_DIR, 'db_repository')
@@ -9,6 +17,8 @@ POSTS_PER_PAGE = 3
 WHOOSH_BASE = os.path.join(BASE_DIR, 'search.db')
 MAX_SEARCH_RESULTS = 50
 ADMINS = ['413115175@qq.com']
+MS_TRANSLATOR_CLIENT_ID = '20200505000440528'
+MS_TRANSLATOR_CLIENT_SECRET = '54WFe_r77QN9O4sHYCoH'
 
 class Config(object):
     # 设置密匙要没有规律，别被人轻易猜到哦

@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
+
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/main.css')}}" />
+<script type="text/javascript" src="{{url_for('static', filename='js/main.js')}}" ></script>
+
 	<div class="main_div" id="main_div">
 		<ul class="ul_img">
 			{% for img_name in img_src %}
