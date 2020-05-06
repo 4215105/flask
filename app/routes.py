@@ -1,4 +1,5 @@
 # coding:utf-8
+import os
 from datetime import datetime
 from app import app
 from flask import render_template, flash, redirect, url_for, g
@@ -19,6 +20,16 @@ from flask_babel import gettext
 from guess_language import guessLanguage
 from flask import jsonify
 from translate import baidu_translate
+from werkzeug import secure_filename
+
+@login_required
+@app.route('/upload', methods = ['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        f = request.files['file']
+        f.save(os.path.join(app.config["UPLOAD_FOLDER"], secure_filename(f.filename)))
+        return 'file uploaded successfully'
+    return render_template('upload.html')
 
 @app.route('/translate', methods = ['POST'])
 @login_required
@@ -113,10 +124,10 @@ def index(page=1):
     form = PostForm()
     if form.validate_on_submit():
         language = guessLanguage(form.post.data)
+        print language
         if language == 'UNKNOWN' or len(language) > 5:
-            language = ''
-        post = Post(body=form.post.data, timestamp=datetime.utcnow(), author=g.user,
-            language = language)
+            language = 'en'
+        post = Post(body=form.post.data, timestamp=datetime.utcnow(), author=g.user, language=language)
         db.session.add(post)
         db.session.commit()
         flash('Your post is now live!')

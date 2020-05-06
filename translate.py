@@ -17,15 +17,15 @@ def baidu_translate(text, sourceLang, destLang):
         return gettext('Error: translation service not configured.')
     httpClient = None
     myurl = '/api/trans/vip/translate'
-
+    text = text.encode('utf8')
     salt = random.randint(32768, 65536)
     sign = MS_TRANSLATOR_CLIENT_ID + text + str(salt) + MS_TRANSLATOR_CLIENT_SECRET
-    sign = hashlib.md5(sign.encode()).hexdigest()
+    print type(text)
+    sign = hashlib.md5(sign).hexdigest()
     if 1:# try:
         # get access token
-        myurl = myurl + '?appid=' + MS_TRANSLATOR_CLIENT_ID + '&q=' + quote(text) \
-            + '&from=' + sourceLang + '&to=' + destLang + '&salt=' + str(salt) + '&sign=' + sign
-
+        myurl = myurl + '?appid=' + MS_TRANSLATOR_CLIENT_ID + '&q=' + quote(text) + '&from=' + sourceLang + '&to=' + destLang + '&salt=' + str(salt) + '&sign=' + sign
+        print myurl
         conn = httplib.HTTPSConnection("api.fanyi.baidu.com")
         conn.request('GET', myurl)
         response = json.loads(conn.getresponse().read())

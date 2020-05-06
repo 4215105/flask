@@ -34,6 +34,8 @@ class Config(object):
     MAIL_PORT = 25
     MAIL_USERNAME = '413115175@qq.com'
     MAIL_PASSWORD = 'opekjyktlsyjbied'
+    UPLOAD_FOLDER = os.path.join(BASE_DIR, 'files')
+    MAX_CONTENT_PATH = 1024*1024*1024
 
     # administrator list
 
