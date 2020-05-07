@@ -1,5 +1,5 @@
 //  vue实例
-var vm = new Vue({
+var vm = new Vue ({
     el: '#out',
     // 自定义定界符，避免vue定界符与jinja2冲突，改变vue起始定界
     delimiters: ['@{', '}}'],

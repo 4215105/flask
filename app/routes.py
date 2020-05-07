@@ -104,7 +104,6 @@ def upload_file():
 @app.route('/download', methods = ['GET', 'POST'])
 def download_file():
     form = DownloadForm()
-    print 'submit???', form.validate_on_submit()
     if form.validate_on_submit():
         filename = secure_filename(form.filename.data)
         file_path = os.path.join(app.config["UPLOAD_FOLDER"], 'files')
@@ -206,7 +205,6 @@ def index(page=1):
     form = PostForm()
     if form.validate_on_submit():
         language = guessLanguage(form.post.data)
-        print language
         if language == 'UNKNOWN' or len(language) > 5:
             language = 'en'
         post = Post(body=form.post.data, timestamp=datetime.utcnow(), author=g.user, language=language)

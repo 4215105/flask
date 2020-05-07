@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <!-- cdn资源 -->
+        <script type="text/javascript" src="{{url_for('static', filename='js/jquery-3.5.1.min.js')}}"></script>
+
+    
+        <!-- vue及sse相关代码 -->
+        <script type="text/javascript" src="{{ url_for('static', filename='js/vue.min.js') }}"></script>
+
+        <script type="text/javascript" src="{{ url_for('static', filename='js/sse.js') }}"></script>
+        
     <title>基于redis简单聊天室</title>
     <style>
         body {
@@ -41,12 +50,7 @@
         <p>Message: <input id="in" placeholder="回车发送信息" /></p>
     </div>
 
-    <!-- cdn资源 -->
-    <script src="{{url_for('static', filename='js/jquery-3.5.1.min.js')}}"></script>
-    <script src="{{ url_for('static', filename='js/sse.js') }}"></script>
 
-    <!-- vue及sse相关代码 -->
-    <script src="{{ url_for('static', filename='js/vue.min.js') }}"></script>
 
 </body>
 
