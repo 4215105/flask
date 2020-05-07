@@ -18,10 +18,77 @@ from app import babel
 from config import LANGUAGES
 from flask_babel import gettext
 from guess_language import guessLanguage
-from flask import jsonify
+from flask import jsonify, Response
 from translate import baidu_translate
 from werkzeug import secure_filename
 from flask import send_from_directory
+from redis import StrictRedis
+
+
+rds = StrictRedis(db=3)
+
+
+# 消息生成器
+def event_stream():
+    # 从数据库连接上获取发布订阅管理对象实例
+    pub = rds.pubsub()
+    # 在管理订阅(建立通道)频道
+    pub.subscribe('chat')
+    # 监听频道信息
+    for message in pub.listen():
+        print(type(message['data']), type(message), message)
+        # 只响应有消息的（字节），首次无消息返回的为int状态码对象，直接忽略
+        if isinstance(message['data'], bytes):
+            # 转为utf8字符串，发送 SSE（Server Send Event）协议格式的数据
+            yield 'data: %s\n\n' % message['data'].decode()
+
+@login_required
+@app.route('/chat')
+def chat_home():
+    user = g.user
+    return render_template('chat.html', user=user)
+
+@login_required
+@app.route('/chat/<username>')
+def chat(username=None):
+    user = User.query.filter_by(username=username).first()
+    if user == None:
+        flash('User ' + username + ' not found.')
+        return redirect(url_for('index'))
+    # 通过路由参数或querystring动注册为当前用户
+    if user or len(request.args) > 0:
+        # 消息闪现（存储在session内，模板页用完即丢）
+        flash(username + u'已经成功登录，加入聊天室！')
+
+    # 模板渲染
+    data = {
+        "user": user,
+        "tip": u"正在聊天中..."
+    }
+    # 关键字参数解包，返回元组（框架会自动解析为一个完整的response对象）
+    return render_template('chat.html', **data), 200
+
+
+# 接收js发送过来的消息
+@login_required
+@app.route('/chatpost', methods=['POST'])
+def chat_post():
+    # 获取表单提交内容
+    user = g.user
+    message = request.form['message']
+    # 返回一个指定字段的时间值
+    now = datetime.datetime.now().replace(microsecond=0).time()
+    # 通过频道发布消息
+    rds.publish('chat', u'[%s] %s: %s' % (now.isoformat(), user, message))
+    # 响应对象
+    return Response(status=204)
+
+
+@login_required  
+@app.route('/stream')
+def stream():
+    return Response(event_stream(), mimetype="text/event-stream")
+
 
 @login_required
 @app.route('/upload', methods = ['GET', 'POST'])
