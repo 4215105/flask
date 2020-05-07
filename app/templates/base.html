@@ -13,7 +13,9 @@
 					sourceLang: sourceLang,
 					destLang: destLang
 				}).done(function(translated) {
+					console.log(translated)
 					$(destId).text(translated['text'])
+					$(sourceId).text(translated['text'].trans_result[0].dst)
 					$(loadingId).hide();
 					$(destId).show();
 				}).fail(function() {
@@ -41,6 +43,7 @@
 			| <form style="display: inline;" action="{{url_for('search')}}" method="post" name="search">{{g.search_form.hidden_tag()}}{{g.search_form.search(size=20)}}<input type="submit" value="Search"></form>
 			 | <a href="{{ url_for('user', username = user.username) }}">Your Profile</a>
 			 | <a href="{{ url_for('upload_file') }}">Upload Your Files</a>
+			 | <a href="{{ url_for('download_file') }}">Download Your Files</a>
      		| <a href="{{ url_for('logout') }}">Logout</a>
      		{% endif %}
 		</div>

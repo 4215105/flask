@@ -49,3 +49,7 @@ class PostForm(FlaskForm):
 
 class SearchForm(FlaskForm):
     search = StringField('search', validators=[DataRequired()])
+
+class DownloadForm(FlaskForm):
+    filename = StringField('filename', validators=[DataRequired()])
+    submit = SubmitField('download')

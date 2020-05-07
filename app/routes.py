@@ -11,7 +11,7 @@ from werkzeug.urls import url_parse
 from app.forms import RegistrationForm
 from app import db
 from config import POSTS_PER_PAGE
-from forms import SearchForm
+from forms import SearchForm, DownloadForm
 from config import MAX_SEARCH_RESULTS
 from emails import follower_notification
 from app import babel
@@ -21,6 +21,7 @@ from guess_language import guessLanguage
 from flask import jsonify
 from translate import baidu_translate
 from werkzeug import secure_filename
+from flask import send_from_directory
 
 @login_required
 @app.route('/upload', methods = ['GET', 'POST'])
@@ -30,6 +31,20 @@ def upload_file():
         f.save(os.path.join(app.config["UPLOAD_FOLDER"], secure_filename(f.filename)))
         return 'file uploaded successfully'
     return render_template('upload.html')
+
+
+@login_required
+@app.route('/download', methods = ['GET', 'POST'])
+def download_file():
+    form = DownloadForm()
+    print 'submit???', form.validate_on_submit()
+    if form.validate_on_submit():
+        filename = secure_filename(form.filename.data)
+        file_path = os.path.join(app.config["UPLOAD_FOLDER"], 'files')
+        if os.path.exists(os.path.join(file_path, filename)):
+            return send_from_directory(file_path, filename, as_attachment=True)
+        return gettext("file [{0}] is not exists!".format(filename))
+    return render_template('download.html', form=form)
 
 @app.route('/translate', methods = ['POST'])
 @login_required

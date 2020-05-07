@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+    <form action = "" method = "post" >
+        
+        {{ form.csrf_token }}
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.filename.label }}<br>
+            {{ form.filename(size=128) }}<br>
+            {% for error in form.filename.errors %}
+            	<span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock content %}
