@@ -11,7 +11,7 @@
         <!-- vue及sse相关代码 -->
         <script type="text/javascript" src="{{ url_for('static', filename='js/vue.min.js') }}"></script>
 
-        <script type="text/javascript" src="{{ url_for('static', filename='js/sse.js') }}"></script>
+
         
     <title>基于redis简单聊天室</title>
     <style>
@@ -49,7 +49,8 @@
     <div>
         <p>Message: <input id="in" placeholder="回车发送信息" /></p>
     </div>
-
+    
+    <script type="text/javascript" src="{{ url_for('static', filename='js/sse.js') }}"></script>
 
 
 </body>

@@ -40,7 +40,7 @@ def event_stream():
         # 只响应有消息的（字节），首次无消息返回的为int状态码对象，直接忽略
         if isinstance(message['data'], bytes):
             # 转为utf8字符串，发送 SSE（Server Send Event）协议格式的数据
-            yield 'data: %s\n\n' % message['data'].decode()
+            yield 'data: %s\n\n' % message['data']
 
 @login_required
 @app.route('/chat')
@@ -76,10 +76,11 @@ def chat_post():
     # 获取表单提交内容
     user = g.user
     message = request.form['message']
+    print type(message)
     # 返回一个指定字段的时间值
-    now = datetime.datetime.now().replace(microsecond=0).time()
+    now = datetime.now().replace(microsecond=0).time()
     # 通过频道发布消息
-    rds.publish('chat', u'[%s] %s: %s' % (now.isoformat(), user, message))
+    rds.publish('chat', '[%s] %s: %s' % (now.isoformat(), user, message.encode('utf8')))
     # 响应对象
     return Response(status=204)
 
