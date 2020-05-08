@@ -42,7 +42,7 @@ def gen(camera):
  
 @login_required 
 @app.route('/video')
-def video_feed():
+def video():
     """Video streaming route. Put this in the src attribute of an img tag."""
     return Response(gen(Camera()),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
